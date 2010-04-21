@@ -160,6 +160,9 @@ A/B OTA specific options
       ones. Should only be used if caller knows it's safe to do so (e.g. all the
       postinstall work is to dexopt apps and a data wipe will happen immediately
       after). Only meaningful when generating A/B OTAs.
+
+  --override_device <device>
+      Override device-specific asserts. Can be a comma-separated list.
 """
 
 from __future__ import print_function
@@ -211,6 +214,7 @@ OPTIONS.payload_signer_args = []
 OPTIONS.extracted_input = None
 OPTIONS.key_passwords = []
 OPTIONS.skip_postinstall = False
+OPTIONS.override_device = 'auto'
 
 
 METADATA_NAME = 'META-INF/com/android/metadata'
@@ -334,6 +338,19 @@ class BuildInfo(object):
 
     # Otherwise assert OEM properties.
     if not self.oem_dicts:
+      raise common.ExternalError(
+          "No OEM file provided to answer expected assertions")
+
+def AppendAssertions(script, info_dict, oem_dicts=None):
+  oem_props = info_dict.get("oem_fingerprint_properties")
+  if oem_props is None or len(oem_props) == 0:
+    if OPTIONS.override_device == "auto":
+      device = GetBuildProp("ro.product.device", info_dict)
+    else:
+      device = OPTIONS.override_device
+    script.AssertDevice(device)
+  else:
+    if not oem_dicts:
       raise common.ExternalError(
           "No OEM file provided to answer expected assertions")
 
@@ -1841,6 +1858,8 @@ def main(argv):
       OPTIONS.extracted_input = a
     elif o == "--skip_postinstall":
       OPTIONS.skip_postinstall = True
+    elif o in ("--override_device"):
+      OPTIONS.override_device = a
     else:
       return False
     return True
@@ -1871,6 +1890,7 @@ def main(argv):
                                  "payload_signer_args=",
                                  "extracted_input_target_files=",
                                  "skip_postinstall",
+                                 "override_device="
                              ], extra_option_handler=option_handler)
 
   if len(args) != 2:

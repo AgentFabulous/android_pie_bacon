@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+ifneq ($(TARGET_PROVIDES_LIBLIGHT), true)
 LOCAL_PATH:= $(call my-dir)
 # HAL module implemenation stored in
 # hw/<COPYPIX_HARDWARE_MODULE_ID>.<ro.board.platform>.so
@@ -27,3 +28,4 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_CFLAGS += -Wno-error
 
 include $(BUILD_SHARED_LIBRARY)
+endif

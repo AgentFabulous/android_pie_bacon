@@ -29,6 +29,10 @@
   <string name="touchscreen_music_gesture_title">音乐</string>
   <string name="touchscreen_flashlight_gesture_title">手电筒</string>
   <string name="touchscreen_flashlight_gesture_summary">画 \'V\' 以启动手电筒</string>
+  <string name="touchscreen_music_gesture_summary">使用手势控制音乐播放 \n
+    • 用双指画 “||” 即可控制播放/暂停\n
+    • 绘制 (\'&#60;\') 即可切换到上一曲\n
+    • 绘制 (\'&#62;\') 即可切换到下一曲</string>
   <!-- O-Click settings -->
   <string name="oclick_connect_string">连接</string>
   <string name="oclick_disconnect_string">断开连接</string>
@@ -51,6 +55,10 @@
   <string name="oclick_notification_title_connected">O-Click 已连接</string>
   <string name="oclick_notification_title_disconnected">O-Click 已断开连接</string>
   <string name="oclick_notification_content_disconnected">按下 O-Click 按钮重新连接</string>
+    <!-- haptic feedback  -->
+    <string name="touchscreen_extras">其他</string>
+    <string name="haptic_feedback">触觉反馈</string>
+    <string name="haptic_feedback_summary">检测到息屏手势时震动</string>
   <!-- Button settings -->
   <string name="button_panel_title">更多按钮</string>
   <string name="button_swap_title">交换按钮</string>

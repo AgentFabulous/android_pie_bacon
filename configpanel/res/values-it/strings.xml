@@ -59,6 +59,10 @@
   <string name="button_panel_title">Pulsanti aggiuntivi</string>
   <string name="button_swap_title">Inverti pulsanti</string>
   <string name="button_swap_summary">Inverti la posizione dei tasti indietro e panoramica</string>
+  <!-- haptic feedback  -->
+  <string name="touchscreen_extras">Extra</string>
+  <string name="haptic_feedback">Feedback aptico</string>
+  <string name="haptic_feedback_summary">Vibra al riconoscimento di una gesture</string>   
   <!-- Notification slider -->
   <string name="notification_slider_category_title">Slider notifiche</string>
   <string name="notification_slider_selection_dialog_title">Azione</string>

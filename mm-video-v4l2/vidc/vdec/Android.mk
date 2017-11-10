@@ -134,7 +134,7 @@ LOCAL_CFLAGS                    := $(libOmxVdec-def)
 LOCAL_C_INCLUDES                += $(libmm-vdec-inc)
 
 LOCAL_PRELINK_MODULE    := false
-LOCAL_SHARED_LIBRARIES  := liblog libutils libbinder libcutils libdl
+LOCAL_SHARED_LIBRARIES  := liblog libutils libbinder libcutils libdl libui
 
 LOCAL_SHARED_LIBRARIES  += libqdMetaData
 

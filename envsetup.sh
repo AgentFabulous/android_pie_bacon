@@ -579,7 +579,11 @@ function lunch()
         local choices=($(TARGET_BUILD_APPS= LUNCH_MENU_CHOICES="${LUNCH_MENU_CHOICES[@]}" get_build_var COMMON_LUNCH_CHOICES))
         if [ $answer -le ${#choices[@]} ]
         then
-            selection=${choices[$(($answer-1))]}
+            if [ "$(__detect_shell)" == "zsh" ]; then
+                selection=${choices[$(($answer))]}
+            else
+                selection=${choices[$(($answer-1))]}
+            fi
         fi
     else
         selection=$answer

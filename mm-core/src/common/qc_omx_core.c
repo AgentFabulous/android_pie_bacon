@@ -44,6 +44,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 #include <stdio.h>
 #include <pthread.h>
+#include <utils/Log.h>
 
 #include "qc_omx_core.h"
 #include "omx_core_cmp.h"
@@ -71,7 +72,7 @@ omx_core_load_cmp_library(char *libname, void **handle_ptr)
   create_qc_omx_component fn_ptr = NULL;
   if(handle_ptr)
   {
-    DEBUG_PRINT("Dynamically Loading the library : %s\n",libname);
+    ALOGI("Dynamically Loading the library : %s\n",libname);
     *handle_ptr = dlopen(libname,RTLD_NOW);
     if(*handle_ptr)
     {
@@ -79,14 +80,14 @@ omx_core_load_cmp_library(char *libname, void **handle_ptr)
 
       if(fn_ptr == NULL)
       {
-        DEBUG_PRINT("Error: Library %s incompatible as QCOM OMX component loader - %s\n",
+        ALOGI("Error: Library %s incompatible as QCOM OMX component loader - %s\n",
                   libname, dlerror());
         *handle_ptr = NULL;
       }
     }
     else
     {
-      DEBUG_PRINT("Error: Couldn't load %s: %s\n",libname,dlerror());
+      ALOGI("Error: Couldn't load %s: %s\n",libname,dlerror());
     }
   }
   return fn_ptr;
@@ -110,7 +111,7 @@ RETURN VALUE
 OMX_API OMX_ERRORTYPE OMX_APIENTRY
 OMX_Init()
 {
-  DEBUG_PRINT("OMXCORE API - OMX_Init \n");
+  ALOGI("OMXCORE API - OMX_Init \n");
   /* Nothing to do here ; shared objects shall be loaded at the get handle method */
   return OMX_ErrorNone;
 }
@@ -131,11 +132,11 @@ RETURN VALUE
 static int get_cmp_index(char *cmp_name)
 {
   int rc = -1,i=0;
-  DEBUG_PRINT("before get_cmp_index **********%d\n", rc);
+  ALOGI("before get_cmp_index **********%d\n", rc);
 
   for(i=0; i< (int)SIZE_OF_CORE; i++)
   {
-   DEBUG_PRINT("get_cmp_index: cmp_name = %s , core[i].name = %s ,count = %d \n",cmp_name,core[i].name,i);
+   ALOGI("get_cmp_index: cmp_name = %s , core[i].name = %s ,count = %d \n",cmp_name,core[i].name,i);
 
     if(!strcmp(cmp_name, core[i].name))
     {
@@ -143,7 +144,7 @@ static int get_cmp_index(char *cmp_name)
         break;
     }
   }
-  DEBUG_PRINT("returning index %d\n", rc);
+  ALOGI("returning index %d\n", rc);
   return rc;
 }
 
@@ -245,7 +246,7 @@ static int get_comp_handle_index(char *cmp_name)
         if(NULL == core[i].inst[j])
         {
           rc = j;
-          DEBUG_PRINT("free handle slot exists %d\n", rc);
+          ALOGI("free handle slot exists %d\n", rc);
           return rc;
         }
       }
@@ -279,7 +280,7 @@ static int check_lib_unload(int index)
     if(core[index].inst[i])
     {
       rc = 0;
-      DEBUG_PRINT("Library Used \n");
+      ALOGI("Library Used \n");
       break;
     }
   }
@@ -299,7 +300,7 @@ PARAMETERS
 RETURN VALUE
   Error None.
 ========================================================================== */
-static int is_cmp_already_exists(char *cmp_name)
+__attribute__((unused)) static int is_cmp_already_exists(char *cmp_name)
 {
   unsigned i    =0,j=0;
   int rc = -1;
@@ -312,7 +313,7 @@ static int is_cmp_already_exists(char *cmp_name)
         if(core[i].inst[j])
         {
           rc = i;
-          DEBUG_PRINT("Component exists %d\n", rc);
+          ALOGI("Component exists %d\n", rc);
           return rc;
         }
       }
@@ -339,7 +340,7 @@ void* get_cmp_handle(char *cmp_name)
 {
   unsigned i    =0,j=0;
 
-  DEBUG_PRINT("get_cmp_handle \n");
+  ALOGI("get_cmp_handle \n");
   for(i=0; i< SIZE_OF_CORE; i++)
   {
     if(!strcmp(cmp_name, core[i].name))
@@ -348,13 +349,13 @@ void* get_cmp_handle(char *cmp_name)
       {
         if(core[i].inst[j])
         {
-          DEBUG_PRINT("get_cmp_handle match\n");
+          ALOGI("get_cmp_handle match\n");
           return core[i].inst[j];
         }
       }
     }
   }
-  DEBUG_PRINT("get_cmp_handle returning NULL \n");
+  ALOGI("get_cmp_handle returning NULL \n");
   return NULL;
 }
 
@@ -401,13 +402,13 @@ OMX_GetHandle(OMX_OUT OMX_HANDLETYPE*     handle,
   int cmp_index = -1;
   int hnd_index = -1;
 
-  DEBUG_PRINT("OMXCORE API :  Get Handle %x %s %x\n",(unsigned) handle,
+  ALOGI("OMXCORE API :  Get Handle %x %s %x\n",(unsigned) handle,
                                                      componentName,
                                                      (unsigned) appData);
   pthread_mutex_lock(&lock_core);
   if(handle)
   {
-    struct stat sd;
+    __attribute__((unused)) struct stat sd;
 
     *handle = NULL;
 
@@ -415,7 +416,7 @@ OMX_GetHandle(OMX_OUT OMX_HANDLETYPE*     handle,
 
     if(cmp_index >= 0)
     {
-       DEBUG_PRINT("getting fn pointer\n");
+       ALOGI("getting fn pointer\n");
 
       // dynamically load the so
       core[cmp_index].fn_ptr =
@@ -434,7 +435,7 @@ OMX_GetHandle(OMX_OUT OMX_HANDLETYPE*     handle,
           if((eRet = qc_omx_component_init(hComp, core[cmp_index].name)) !=
                            OMX_ErrorNone)
           {
-              DEBUG_PRINT("Component not created succesfully\n");
+              ALOGI("Component not created succesfully\n");
               pthread_mutex_unlock(&lock_core);
               return eRet;
 
@@ -447,35 +448,35 @@ OMX_GetHandle(OMX_OUT OMX_HANDLETYPE*     handle,
           }
           else
           {
-            DEBUG_PRINT("OMX_GetHandle:NO free slot available to store Component Handle\n");
+            ALOGI("OMX_GetHandle:NO free slot available to store Component Handle\n");
             pthread_mutex_unlock(&lock_core);
             return OMX_ErrorInsufficientResources;
           }
-          DEBUG_PRINT("Component %x Successfully created\n",(unsigned)*handle);
+          ALOGI("Component %x Successfully created\n",(unsigned)*handle);
         }
         else
         {
           eRet = OMX_ErrorInsufficientResources;
-          DEBUG_PRINT("Component Creation failed\n");
+          ALOGI("Component Creation failed\n");
         }
       }
       else
       {
         eRet = OMX_ErrorNotImplemented;
-        DEBUG_PRINT("library couldnt return create instance fn\n");
+        ALOGI("library couldnt return create instance fn\n");
       }
 
     }
     else
     {
       eRet = OMX_ErrorNotImplemented;
-      DEBUG_PRINT("ERROR: Already another instance active  ;rejecting \n");
+      ALOGI("ERROR: Already another instance active  ;rejecting \n");
     }
   }
   else
   {
     eRet =  OMX_ErrorBadParameter;
-    DEBUG_PRINT("\n OMX_GetHandle: NULL handle \n");
+    ALOGI("\n OMX_GetHandle: NULL handle \n");
   }
   pthread_mutex_unlock(&lock_core);
   return eRet;
@@ -498,7 +499,7 @@ OMX_FreeHandle(OMX_IN OMX_HANDLETYPE hComp)
 {
   OMX_ERRORTYPE eRet = OMX_ErrorNone;
   int err = 0, i = 0;
-  DEBUG_PRINT("OMXCORE API :  Free Handle %x\n",(unsigned) hComp);
+  ALOGI("OMXCORE API :  Free Handle %x\n",(unsigned) hComp);
 
   // 0. Check that we have an active instance
   if((i=is_cmp_handle_exists(hComp)) >=0)
@@ -508,16 +509,16 @@ OMX_FreeHandle(OMX_IN OMX_HANDLETYPE hComp)
     {
         pthread_mutex_lock(&lock_core);
         /* Unload component library */
-    if( (i < SIZE_OF_CORE) && core[i].so_lib_handle)
+    if( (i < (int)SIZE_OF_CORE) && core[i].so_lib_handle)
     {
            if(check_lib_unload(i))
            {
-              DEBUG_PRINT_ERROR(" Unloading the dynamic library for %s\n",
+              ALOGE(" Unloading the dynamic library for %s\n",
                                   core[i].name);
               err = dlclose(core[i].so_lib_handle);
               if(err)
               {
-                  DEBUG_PRINT_ERROR("Error %d in dlclose of lib %s\n",
+                  ALOGE("Error %d in dlclose of lib %s\n",
                                      err,core[i].name);
               }
               core[i].so_lib_handle = NULL;
@@ -528,13 +529,13 @@ OMX_FreeHandle(OMX_IN OMX_HANDLETYPE hComp)
     }
     else
     {
-    DEBUG_PRINT(" OMX_FreeHandle failed on %x\n",(unsigned) hComp);
+    ALOGI(" OMX_FreeHandle failed on %x\n",(unsigned) hComp);
         return eRet;
     }
   }
   else
   {
-    DEBUG_PRINT_ERROR("OMXCORE Warning: Free Handle called with no active instances\n");
+    ALOGE("OMXCORE Warning: Free Handle called with no active instances\n");
   }
   return OMX_ErrorNone;
 }
@@ -552,13 +553,13 @@ RETURN VALUE
   None.
 ========================================================================== */
 OMX_API OMX_ERRORTYPE OMX_APIENTRY
-OMX_SetupTunnel(OMX_IN OMX_HANDLETYPE outputComponent,
-                OMX_IN OMX_U32             outputPort,
-                OMX_IN OMX_HANDLETYPE  inputComponent,
-                OMX_IN OMX_U32              inputPort)
+OMX_SetupTunnel(__attribute__ ((unused)) OMX_IN OMX_HANDLETYPE outputComponent,
+                __attribute__ ((unused)) OMX_IN OMX_U32             outputPort,
+                __attribute__ ((unused)) OMX_IN OMX_HANDLETYPE  inputComponent,
+                __attribute__ ((unused)) OMX_IN OMX_U32              inputPort)
 {
   /* Not supported right now */
-  DEBUG_PRINT("OMXCORE API: OMX_SetupTunnel Not implemented \n");
+  ALOGI("OMXCORE API: OMX_SetupTunnel Not implemented \n");
   return OMX_ErrorNotImplemented;
 }
 /* ======================================================================
@@ -575,11 +576,11 @@ RETURN VALUE
   None.
 ========================================================================== */
 OMX_API OMX_ERRORTYPE
-OMX_GetContentPipe(OMX_OUT OMX_HANDLETYPE* pipe,
-                   OMX_IN OMX_STRING        uri)
+OMX_GetContentPipe(__attribute__ ((unused)) OMX_OUT OMX_HANDLETYPE* pipe,
+                   __attribute__ ((unused)) OMX_IN OMX_STRING        uri)
 {
   /* Not supported right now */
-  DEBUG_PRINT("OMXCORE API: OMX_GetContentPipe Not implemented \n");
+  ALOGI("OMXCORE API: OMX_GetContentPipe Not implemented \n");
   return OMX_ErrorNotImplemented;
 }
 
@@ -602,7 +603,7 @@ OMX_ComponentNameEnum(OMX_OUT OMX_STRING componentName,
                       OMX_IN  OMX_U32            index)
 {
   OMX_ERRORTYPE eRet = OMX_ErrorNone;
-  DEBUG_PRINT("OMXCORE API - OMX_ComponentNameEnum %x %d %d\n",(unsigned) componentName
+  ALOGI("OMXCORE API - OMX_ComponentNameEnum %x %d %d\n",(unsigned) componentName
                                                               ,(unsigned)nameLen
                                                               ,(unsigned)index);
   if(index < SIZE_OF_CORE)
@@ -729,7 +730,7 @@ OMX_GetRolesOfComponent(OMX_IN OMX_STRING compName,
   /* Not supported right now */
   OMX_ERRORTYPE eRet = OMX_ErrorNone;
   unsigned i,j,numofroles = 0;;
-  DEBUG_PRINT("GetRolesOfComponent %s\n",compName);
+  ALOGI("GetRolesOfComponent %s\n",compName);
 
   if (roles == NULL)
   {
@@ -791,7 +792,7 @@ OMX_GetRolesOfComponent(OMX_IN OMX_STRING compName,
   }
   else
   {
-    DEBUG_PRINT("ERROR: Both Roles and numRoles Invalid\n");
+    ALOGI("ERROR: Both Roles and numRoles Invalid\n");
     eRet = OMX_ErrorBadParameter;
   }
   return eRet;

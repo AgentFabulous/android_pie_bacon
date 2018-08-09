@@ -9,7 +9,7 @@ LOCAL_PATH:= $(ROOT_DIR)
 # 				Common definitons
 # ---------------------------------------------------------------------------------
 
-libmm-venc-def := -g -O3 -Dlrintf=_ffix_r
+libmm-venc-def := -g -O3 -Dlrintf=_ffix_r -Wno-error
 libmm-venc-def += -D__align=__alignx
 libmm-venc-def += -D__alignx\(x\)=__attribute__\(\(__aligned__\(x\)\)\)
 libmm-venc-def += -DT_ARM

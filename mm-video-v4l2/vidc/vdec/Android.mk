@@ -151,7 +151,7 @@ LOCAL_SRC_FILES         += ../common/src/vidc_color_converter.cpp
 LOCAL_ADDITIONAL_DEPENDENCIES  := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
 
 # omx_vdec_msm8974.cpp:9375:16: address of array 'extra->data' will always evaluate to 'true'
-LOCAL_CLANG_CFLAGS      += -Wno-pointer-bool-conversion
+LOCAL_CLANG_CFLAGS      += -Wno-error
 
 include $(BUILD_SHARED_LIBRARY)
 

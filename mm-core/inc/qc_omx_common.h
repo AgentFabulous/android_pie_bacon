@@ -53,6 +53,10 @@ extern "C" {
 typedef void * (*create_qc_omx_component)(void);
 
 #ifdef _ANDROID_
+
+#ifdef LOG_TAG
+#undef LOG_TAG
+#endif
 #define LOG_TAG "QC_CORE"
 #endif
 #include "qc_omx_msg.h"

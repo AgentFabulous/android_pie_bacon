@@ -3,7 +3,7 @@ include $(LOCAL_PATH)/../common.mk
 include $(CLEAR_VARS)
 
 # b/24171136 many files not compiling with clang/llvm yet
-LOCAL_CLANG := false
+LOCAL_CLANG := true
 
 LOCAL_MODULE                  := libqdutils
 LOCAL_MODULE_TAGS             := optional
@@ -23,7 +23,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 
 # b/24171136 many files not compiling with clang/llvm yet
-LOCAL_CLANG := false
+LOCAL_CLANG := true
 
 LOCAL_COPY_HEADERS_TO           := $(common_header_export_path)
 LOCAL_COPY_HEADERS              := qdMetaData.h

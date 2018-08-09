@@ -3,7 +3,7 @@ include $(LOCAL_PATH)/../common.mk
 include $(CLEAR_VARS)
 
 # b/24171136 many files not compiling with clang/llvm yet
-LOCAL_CLANG := false
+LOCAL_CLANG := true
 
 LOCAL_MODULE                  := libhdmi
 LOCAL_MODULE_TAGS             := optional

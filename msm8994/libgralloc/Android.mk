@@ -18,7 +18,7 @@ include $(LOCAL_PATH)/../common.mk
 include $(CLEAR_VARS)
 
 # b/24171136 many files not compiling with clang/llvm yet
-LOCAL_CLANG := false
+LOCAL_CLANG := true
 
 LOCAL_MODULE                  := gralloc.$(TARGET_BOARD_PLATFORM)
 LOCAL_MODULE_RELATIVE_PATH    := hw
@@ -46,7 +46,7 @@ include $(BUILD_SHARED_LIBRARY)
 include $(CLEAR_VARS)
 
 # b/24171136 many files not compiling with clang/llvm yet
-LOCAL_CLANG := false
+LOCAL_CLANG := true
 
 LOCAL_MODULE                  := libmemalloc
 LOCAL_MODULE_TAGS             := optional

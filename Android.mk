@@ -33,6 +33,7 @@ LOCAL_REQUIRED_MODULES := libantradio
 LOCAL_PROGUARD_FLAG_FILES := proguard.flags
 LOCAL_CERTIFICATE := platform
 LOCAL_MODULE_TAGS := optional
+LOCAL_SDK_VERSION := current
 LOCAL_PACKAGE_NAME := AntHalService
 
 include $(BUILD_PACKAGE)
